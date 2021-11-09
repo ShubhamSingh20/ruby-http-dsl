@@ -1,15 +1,18 @@
 require_relative 'mock'
 
-Mock.url("localhost:8080") do
-  set_header 'Authroization-Token', 'token'
-
-  get do
-    set_header 'first', 1
-    p response
-  end
+Mock.url("http://localhost:4000/api/{version}/refresh_streak_data") do
+  set_cookies 'id_token', 'eyJhbGciOiJIUzI1NiJ9'
 
   post do
-    set_header 'second', 2
-    body {}
+    set_params :version, 'v2'
+    set_body {:streak_data => null}
+
+    response
+  end
+
+  delete do
+    set_params :version, 'v1'
+
+    response
   end
 end
