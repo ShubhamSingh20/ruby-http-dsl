@@ -11,7 +11,7 @@ Mock.http do
 
 	# configs specified in a specific action will only be limited
 	# to that action
-	get "http://localhost:4000/api/{version}/user/top" 
+	get "http://localhost:4000/api/{version}/user/top" do
 		set_query :limit, 5
 		set_query :order, :asc
     set_params :version, :v2
