@@ -1,10 +1,10 @@
 require 'uri'
+require 'json'
 require 'net/http'
 
 require_relative 'utils'
 
 module Mock
-
   class MockHTTP
     class << self
       MOCK_ATTRIBUTES = {
@@ -40,14 +40,14 @@ module Mock
 
       def define_http_actions
         [:get, :post, :delete].each do |action|
-          define_method("#{action.to_s}") do |&block|
+          define_method("#{action.to_s}") do |url, &block|
+            instance_variable_set(:@root, url)
             instance_variable_set(:@method, action)
             nested_instance(&block)
           end
         end
       end
     end
-
 
     def uri_with_params
       uri = @root.dup
@@ -57,6 +57,11 @@ module Mock
 
     def response
       make_request
+    end
+
+    def json
+      response = make_request()
+      JSON.parse(response.body) if response.code.to_i < 500
     end
 
     private
@@ -93,14 +98,13 @@ module Mock
       end
   end
 
-
-  def self.url(root_url, &block)
-    http = MockHTTP.new(root: root_url) 
+  def self.http(&block)
+    http = MockHTTP.new 
     http.instance_eval(&block)
   end
 
   MockHTTP.define_initialize
   MockHTTP.define_attributes
-  MockHTTP.define_attribute_setters
   MockHTTP.define_http_actions
+  MockHTTP.define_attribute_setters
 end
