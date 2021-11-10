@@ -96,7 +96,7 @@ module Mock
         request = http_class.new(uri)
         request = append_headers(request)
 
-        Net::HTTP.start(uri.hostname, uri.port) { |http|
+        Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http|
           http.request(request)
         }
       end
