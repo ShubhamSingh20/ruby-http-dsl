@@ -30,11 +30,15 @@ module Mock
       end
 
       def define_attribute_setters
-        [:headers, :params, :query, :cookies, :body].each do |attribute|
+        [:headers, :params, :query, :cookies].each do |attribute|
           define_method("set_#{attribute.to_s}") do |key, value|
             attribute_value = instance_variable_get("@#{attribute.to_s}")
             attribute_value[key] = value.to_s
           end
+        end
+
+        define_method(:set_body) do |body|
+          instance_variable_set(:@body, body)
         end
       end
 
