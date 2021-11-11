@@ -82,7 +82,7 @@ module Mock
           request['Cookie'] = @cookies.keys.map(&:to_s)
             .zip(@cookies.values.map(&:to_s))
             .map { |r| r.join "=" }
-            .join ";" unless @cookies.empty?
+            .join ";"
         end
 
         request
