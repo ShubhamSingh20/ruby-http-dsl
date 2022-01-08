@@ -12,27 +12,27 @@ Mock.http do
    # configs specified in a specific action will only be limited
    # to that action
    get "http://localhost:4000/api/{version}/user/top" do
-       set_query :limit, 10
-       set_query :order, :asc
-       set_params :version, :v2
+      set_query :limit, 10
+      set_query :order, :asc
+      set_params :version, :v2
 
-       json
+      json
    end
 
    post "http://localhost:4000/api/{version}/refresh_streak_data" do
-       set_params :version, :v2
-       set_body {:data => 100, :message => :ok}
+      set_params :version, :v2
+      set_body {:data => 100, :message => :ok}
 
-       response
+      response
    end
 
    delete "http://localhost:4000/api/{version}/users/{user_id}" do
-       get_user_id = -> { some logic to get user id}
+      get_user_id = -> { some logic to get user id}
 
-       set_params :user_id, get_user_id.call
-       set_params :version, :v1
+      set_params :user_id, get_user_id.call
+      set_params :version, :v1
 
-       response
+      response
    end
 end
 ```
