@@ -75,6 +75,8 @@ module Mock
       end
 
       def append_headers(request)
+        request['Content-Type'] = 'application/json'
+
         # set headers
         @headers.each { |h, v| request[h.to_s] = v}
 
@@ -94,9 +96,12 @@ module Mock
 
         http_class = Utils.class_from_string("Net::HTTP::#{@method.to_s.capitalize}")
         request = http_class.new(uri)
+
+        request.body = @body.to_json unless @body.empty?
         request = append_headers(request)
 
-        Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http|
+        require_https = uri.scheme.downcase == 'https'
+        Net::HTTP.start(uri.hostname, uri.port, use_ssl: require_https) { |http|
           http.request(request)
         }
       end
